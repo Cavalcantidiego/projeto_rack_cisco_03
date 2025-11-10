@@ -1,0 +1,53 @@
+!Acessando o modo Exec Privilegiado
+enable
+
+    !Configuração de data/hora em inglês, abreviado ou completo
+    !Exemplo: October ou Oct
+    !Primeiro Hora no formato: 00:00:00 (hora:minutos:segundos) depois Data no formato: Dia Mês (Completo ou Abreviado) Ano Completo
+    clock set 20:35:00 25 october 2025
+
+    configure terminal
+        hostname rt-g3
+        service password-encryption
+        service timestamps log datetime msec
+        service timestamps debug datetime msec
+        security passwords min-length 8
+        login block-for 120 attempts 4 within 60
+        no ip domain-lookup
+        
+        !Configuração do Banner da mensagem do dia
+        banner motd !                                                                                                                  
+        _____    _____      ______  _____  _______  _____    _____  _______   _____   _____   _______  _____    _____  
+        (_____)  (_____)    (______)(_____)(__ _ __)(_____)  (_____)(_______) (_____) (_____) (_______)(_____)  (_____)
+        (_)   (_)(_)___      (_)__  (_)___     (_)  (_)___(_)(_)  ___   (_)   (_)___(_)(_)__(_)   (_)  (_)   (_)(_)___  
+        (_)   (_)  (___)_    (____)   (___)_   (_)  (_______)(_) (___)  (_)   (_______)(_____)    (_)  (_)   (_)  (___)_
+        (_)___(_)  ____(_)   (_)____  ____(_)  (_)  (_)   (_)(_)___(_)__(_)__ (_)   (_)( ) ( )  __(_)__(_)___(_)  ____(_)
+        (_____)  (_____)    (______)(_____)   (_)  (_)   (_) (_____)(_______)(_)   (_)(_)  (_)(_______)(_____)  (_____)!
+                                                                                                                        
+                                                                                                                        
+        
+        !Criação dos usuários, senhas do Tipo-5 e privilégios diferenciados
+        enable secret 123@Tatuape
+        username ERIVELTON privilege 15 secret 123@Tatuape
+        username DIEGO privilege 15 secret 123@Tatuape
+        username JUAN privilege 15 secret 123@Tatuape
+        username RAPHAEL privilege 15 secret 123@Tatuape
+        username VAAMONDE privilege 15 secret 123@Tatuape
+        no cdp run
+        no lldp run
+
+        !configurando a line console 0
+        line console 0
+            password 123@Tatuape
+            login local
+            logging synchronous
+            exec-timeout 5 30
+            end
+    copy running-config startup-config
+    show clock
+    show running-config
+    show running-config | section include con 0
+    show users
+    show logging
+    disable
+    exit
